@@ -35,6 +35,7 @@ func ExecuteCommand(command string) (output string, err error) {
 	if err != nil {
 		log.Warnf("%s: %s", err, stderr.String())
 		fmt.Printf("%s: %s\n", err, stderr.String())
+		fmt.Printf("out:%s\n", out.String())
 		return stdoutBuffer.String(), err
 	}
 	log.Infof("%s success. %s\n", command, out.String())
