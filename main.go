@@ -53,7 +53,7 @@ func main() {
 
 	// 6 Compile, install, and initialize mysql
 	//install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
-	install.InitMs(UserName, MySQLDPath)
+	install.InitMs(MySQLDPath, UserName, DataDirPath, BaseDirPath)
 
 	// 7 View the password
 	install.Cat(MySQLErrPath)
