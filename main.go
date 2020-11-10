@@ -34,5 +34,6 @@ func main() {
 
 	// 2 Execute the UntarGz command
 	install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
-	install.Mv(ShareFilePath+MySQLFileName, RootPath+MySQL)
+	install.Mkdir(RootPath + MySQL)
+	install.Mv(ShareFilePath+MySQLFileName+"/*", RootPath+MySQL)
 }
