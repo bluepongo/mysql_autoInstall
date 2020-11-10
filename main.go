@@ -29,11 +29,11 @@ const (
 
 func main() {
 	// 1 Create user group and user
-	install.AddGroup(GroupName)
-	install.AddUser(GroupName, UserName)
+	//install.AddGroup(GroupName)
+	//install.AddUser(GroupName, UserName)
 
 	// 2 Execute the UntarGz command
-	//install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
+	install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
 	//install.Mv(ShareFilePath+MySQLFileName, RootPath)
 	//install.Mv(RootPath+MySQLFileName, BaseDirPath)
 }
