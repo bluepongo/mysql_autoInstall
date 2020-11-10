@@ -63,7 +63,7 @@ func UnTarGz(srcFilePath string, destDirPath string) {
 			}
 		}
 	}
-	fmt.Printf("UnTarGzing file '%s' successfully!\n", srcFilePath)
+	fmt.Printf("[Info]UnTarGzing file '%s' successfully!\n", srcFilePath)
 	log.Infof("UnTarGzing file '%s' successfully!", srcFilePath)
 }
 
