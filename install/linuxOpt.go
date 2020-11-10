@@ -87,7 +87,7 @@ func Cp(fromPath, toPath string) (output string, err error) {
 // Search for the file content
 func Cat(targetPath string) (output string, err error) {
 	return ExecuteCommand(
-		fmt.Sprintf("cat %s", targetPath))
+		fmt.Sprintf("sudo cat %s", targetPath))
 }
 
 // Establish a soft connection
