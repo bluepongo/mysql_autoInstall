@@ -43,8 +43,8 @@ func main() {
 	install.Mkdir(DataDirPath)
 
 	// 4 Change the permissions
-	//install.Chown(GroupName, UserName, BaseDirPath)
-	//install.Chmod(BaseDirPath)
+	install.Chown(GroupName, UserName, BaseDirPath)
+	install.Chmod(BaseDirPath)
 
 	// 5 Copy the default my.cnf to the /etc/
 	install.Cp(ShareFilePath+MyCnfFileName, EtcPath+MyCnfFileName)
