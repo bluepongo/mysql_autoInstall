@@ -75,7 +75,7 @@ func Mkdir(targetPath string) (output string, err error) {
 // Move a file to the toPath
 func Mv(fromPath, toPath string) (output string, err error) {
 	return ExecuteCommand(
-		fmt.Sprintf("mv %s %s", fromPath, toPath))
+		fmt.Sprintf("mv -f %s %s", fromPath, toPath))
 }
 
 // Copy a file to the toPath
