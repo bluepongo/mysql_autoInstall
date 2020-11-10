@@ -46,15 +46,15 @@ func main() {
 	//install.Chown(GroupName, UserName, BaseDirPath)
 	//install.Chmod(BaseDirPath)
 
-	// 5 Compile, install, and initialize mysql
-	//install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
+	// 5 Copy the default my.cnf to the /etc/
+	install.Cp(ShareFilePath+MyCnfFileName, EtcPath+MyCnfFileName)
 
-	// 6 View the pass word
+	// 6 Compile, install, and initialize mysql
+	install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
+
+	// 7 View the password
 	install.Cat(MySQLErrPath)
 	fmt.Println("Please remember the above password!It's your mysql initial password, and copy to the next password.")
-
-	// 7 Copy the default my.cnf to the /etc/
-	install.Cp(ShareFilePath+MyCnfFileName, EtcPath+MyCnfFileName)
 
 	// 8 Start the mysql service
 	install.ServiceStart(MySQLServePath)
