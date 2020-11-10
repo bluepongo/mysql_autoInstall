@@ -95,30 +95,3 @@ func InitMysqld(mySqld string, userName string, dataDirPath string, baseDirPath 
 
 	log.Info("Initialize successfully!")
 }
-
-// Execute the linux command
-func Mv(fromPath, toPath string) (output string, err error) {
-
-	// Initialize a logger
-	fileName := LogFilePath
-	_, _, err = log.InitLoggerWithDefaultConfig(fileName)
-	if err != nil {
-		fmt.Printf("Init logger failed.\n%s", err.Error())
-	}
-
-	var stdoutBuffer bytes.Buffer
-
-	cmd := exec.Command(fmt.Sprintf("mv %s %s", fromPath, toPath))
-	cmd.Stdout = &stdoutBuffer
-	cmd.Stderr = &stdoutBuffer
-
-	err = cmd.Run()
-	if err != nil {
-		log.Warnf("%s: %s", err, stderr.String())
-		fmt.Printf("%s: %s\n", err, stderr.String())
-		return stdoutBuffer.String(), err
-	}
-	log.Infof("mv success. %s\n", out.String())
-	fmt.Printf("[Info]mv success. %s\n", out.String())
-	return stdoutBuffer.String(), err
-}
