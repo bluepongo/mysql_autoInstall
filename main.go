@@ -54,14 +54,10 @@ func main() {
 	//install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
 	install.InitMs(MySQLDPath, UserName, DataDirPath, BaseDirPath)
 
-	// 7 View the password
-	install.Cat(MySQLErrPath)
-	//fmt.Println("Please remember the above password!It's your mysql initial password, and copy to the next password.")
+	// 7 Start the mysql service
+	install.ServiceStart(MySQLServePath)
 
-	// 8 Start the mysql service
-	//install.ServiceStart(MySQLServePath)
-
-	// 9 Establish the soft connection
+	// 8 Establish the soft connection
 	//install.Ln(MySQLServePath, LnMySQLServer)
 	//install.Ln(MySQlBinPath+MySQL, BinPanth+MySQL)
 }
