@@ -81,7 +81,7 @@ func Mv(fromPath, toPath string) (output string, err error) {
 // Copy a file to the toPath
 func Cp(fromPath, toPath string) (output string, err error) {
 	return ExecuteCommand(
-		fmt.Sprintf("cp %s %s", fromPath, toPath))
+		fmt.Sprintf("cp -f %s %s", fromPath, toPath))
 }
 
 // Search for the file content

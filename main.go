@@ -1,6 +1,9 @@
 package main
 
-import "github.com/bluepongo/mysql_autoInstall/install"
+import (
+	"fmt"
+	"github.com/bluepongo/mysql_autoInstall/install"
+)
 
 const (
 	RootPath       = "/usr/local/"
@@ -29,8 +32,8 @@ const (
 
 func main() {
 	// 1 Create user group and user
-	install.AddGroup(GroupName)
-	install.AddUser(GroupName, UserName)
+	//install.AddGroup(GroupName)
+	//install.AddUser(GroupName, UserName)
 
 	// 2 Execute the UntarGz command
 	//install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
@@ -44,6 +47,19 @@ func main() {
 	//install.Chmod(BaseDirPath)
 
 	// 5 Compile, install, and initialize mysql
-	install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
+	//install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
 
+	// 6 View the pass word
+	install.Cat(MySQLErrPath)
+	fmt.Println("Please remember the above password!It's your mysql initial password, and copy to the next password.")
+
+	// 7 Copy the default my.cnf to the /etc/
+	install.Cp(ShareFilePath+MyCnfFileName, EtcPath+MyCnfFileName)
+
+	// 8 Start the mysql service
+	install.ServiceStart(MySQLServePath)
+
+	// 9 Establish the soft connection
+	install.Ln(MySQLServePath, LnMySQLServer)
+	install.Ln(MySQlBinPath+MySQL, BinPanth+MySQL)
 }
