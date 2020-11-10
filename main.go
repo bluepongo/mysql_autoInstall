@@ -39,7 +39,7 @@ func main() {
 	install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
 
 	install.Mv(ShareFilePath+MySQLFileName, ShareFilePath+MySQL)
-	install.Mv(ShareFilePath+MySQL, RootPath+MySQL)
+	install.Cp(ShareFilePath+MySQL, RootPath+MySQL)
 
 	// 3 Create the data directory under /usr/local/mysql
 	install.Mkdir(DataDirPath)
