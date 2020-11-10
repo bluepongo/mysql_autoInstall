@@ -44,5 +44,6 @@ func main() {
 	install.Chmod(BaseDirPath)
 
 	// 5 Compile, install, and initialize mysql
-	install.InitMysqld((MySQLDPath, UserName, DataDirPath, BaseDirPath)
+	install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
+
 }
