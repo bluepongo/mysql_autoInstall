@@ -50,7 +50,8 @@ func main() {
 	install.Cp(ShareFilePath+MyCnfFileName, EtcPath+MyCnfFileName)
 
 	// 6 Compile, install, and initialize mysql
-	install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
+	//install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
+	install.InitMs(UserName, MySQLDPath)
 
 	// 7 View the password
 	install.Cat(MySQLErrPath)

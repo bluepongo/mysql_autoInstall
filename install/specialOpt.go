@@ -69,6 +69,7 @@ func UnTarGz(srcFilePath string, destDirPath string) {
 
 // Initialize mysqld.
 func InitMysqld(mySqld string, userName string, dataDirPath string, baseDirPath string) {
+
 	// Initialize a logger
 	fileName := LogFilePath
 	_, _, err := log.InitLoggerWithDefaultConfig(fileName)

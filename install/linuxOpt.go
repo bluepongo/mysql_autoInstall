@@ -88,7 +88,7 @@ func Cp(fromPath, toPath string) (output string, err error) {
 // Search for the file content
 func Cat(targetPath string) (output string, err error) {
 	return ExecuteCommand(
-		fmt.Sprintf("sudo cat %s", targetPath))
+		fmt.Sprintf("cat %s", targetPath))
 }
 
 // Establish a soft connection
@@ -107,4 +107,11 @@ func ServiceStart(serviceName string) (output string, err error) {
 func ServiceRestart(serviceName string) (output string, err error) {
 	return ExecuteCommand(
 		fmt.Sprintf("service %s restart", serviceName))
+}
+
+func InitMs(userName, mysqldPath string) (output string, err error) {
+	return ExecuteCommand(
+		fmt.Sprintf(
+			"sudo %s/bin/mysqld --initialize --user=%s",
+			mysqldPath, userName))
 }
