@@ -93,7 +93,7 @@ func Cat(targetPath string) (output string, err error) {
 // Establish a soft connection
 func Ln(fromPath, toPath string) (output string, err error) {
 	return ExecuteCommand(
-		fmt.Sprintf("ln -s %s %s", fromPath, toPath))
+		fmt.Sprintf("sudo ln -s %s %s", fromPath, toPath))
 }
 
 // Start a service
