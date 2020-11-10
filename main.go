@@ -29,19 +29,19 @@ const (
 
 func main() {
 	// 1 Create user group and user
-	//install.AddGroup(GroupName)
-	//install.AddUser(GroupName, UserName)
+	install.AddGroup(GroupName)
+	install.AddUser(GroupName, UserName)
 
 	// 2 Execute the UntarGz command
-	install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
-	install.Mv(ShareFilePath+MySQLFileName, RootPath+MySQL)
+	//install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
+	//install.Mv(ShareFilePath+MySQLFileName, RootPath+MySQL)
 
 	// 3 Create the data directory under /usr/local/mysql
-	install.Mkdir(DataDirPath)
+	//install.Mkdir(DataDirPath)
 
 	// 4 Change the permissions
-	install.Chown(GroupName, UserName, BaseDirPath)
-	install.Chmod(BaseDirPath)
+	//install.Chown(GroupName, UserName, BaseDirPath)
+	//install.Chmod(BaseDirPath)
 
 	// 5 Compile, install, and initialize mysql
 	install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
