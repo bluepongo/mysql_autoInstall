@@ -36,11 +36,11 @@ func main() {
 	//install.AddUser(GroupName, UserName)
 
 	// 2 Execute the UntarGz command
-	//install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
-	//install.Mv(ShareFilePath+MySQLFileName, RootPath+MySQL)
+	install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
+	install.Mv(ShareFilePath+MySQLFileName, RootPath+MySQL)
 
 	// 3 Create the data directory under /usr/local/mysql
-	//install.Mkdir(DataDirPath)
+	install.Mkdir(DataDirPath)
 
 	// 4 Change the permissions
 	//install.Chown(GroupName, UserName, BaseDirPath)
