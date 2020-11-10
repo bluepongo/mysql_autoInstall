@@ -34,7 +34,7 @@ func ExecuteCommand(command string) (output string, err error) {
 	err = cmd.Run()
 	if err != nil {
 		log.Warnf("%s: %s", err, stderr.String())
-		fmt.Printf("%s: %s\n", err, stderr.String())
+		fmt.Printf("%s,%s: %s\n", command, err, stderr.String())
 		fmt.Printf("out:%s\n", out.String())
 		return stdoutBuffer.String(), err
 	}
