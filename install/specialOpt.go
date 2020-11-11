@@ -2,12 +2,10 @@ package install
 
 import (
 	"archive/tar"
-	"bytes"
 	"compress/gzip"
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
 	"path"
 
 	"github.com/romberli/log"
