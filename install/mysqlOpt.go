@@ -26,6 +26,7 @@ type DbInfo struct {
 	Table  string
 }
 
+// Init mysql
 func MySQLInit() *sql.DB {
 
 	db1 := DbInfo{
@@ -46,12 +47,48 @@ func MySQLInit() *sql.DB {
 
 	database, err := sql.Open(db1.Engine, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf-8", db1.User, db1.Pass, db1.Ip, db1.Port, db1.Table))
 
-	if err != nil {
-		fmt.Println("mysql open failed, error:", err)
+	if err := database.Ping(); err != nil {
+		fmt.Println("[Warn]mysql open failed, error:", err)
 		log.Warnf("Mysql open failed error: %s", err)
 		return nil
 	}
-	fmt.Println("Mysql open successfully!")
+	fmt.Println("[Info]Mysql open successfully!")
 	log.Info("Mysql open successfully!")
 	return database
+}
+
+// mysql operation
+func MySQLOperation(DB *sql.DB, query string, args ...interface{}) {
+
+	// Start a transaction
+	tx, err := DB.Begin()
+	if err != nil {
+		fmt.Println("[Warn]]tx failed.")
+		log.Warn("tx failed.")
+		return
+	}
+
+	// Prepare a sql
+	stmt, err := tx.Prepare(query)
+	if err != nil {
+		fmt.Println("[Warn]]Prepare failed.")
+		log.Warn("Prepare failed.")
+		return
+	}
+
+	// Execute the sql sentence
+	res, err := stmt.Exec(args)
+	if err != nil {
+		fmt.Println("[Warn]]Exec failed.")
+		log.Warn("Exec failed.")
+		return
+	}
+
+	// Commit the transaction
+	tx.Commit()
+
+	// Get the last id
+	fmt.Println(res.LastInsertId())
+	fmt.Println("[Info]Mysql exec successfully!")
+	log.Info("Mysql exec successfully!")
 }
