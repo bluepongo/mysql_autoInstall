@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/romberli/log"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const (
