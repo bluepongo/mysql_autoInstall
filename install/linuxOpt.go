@@ -109,7 +109,7 @@ func ServiceRestart(serviceName string) (output string, err error) {
 		fmt.Sprintf("sudo service %s restart", serviceName))
 }
 
-func InitMs(mysqldPath, userName, dataDirPath, baseDirPath string) (output string, err error) {
+func InitMysql(mysqldPath, userName, dataDirPath, baseDirPath string) (output string, err error) {
 	return ExecuteCommand(
 		fmt.Sprintf(
 			"sudo %s --initialize-insecure --user=%s --datadir=%s --basedir=%s",

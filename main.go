@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/bluepongo/mysql_autoInstall/install"
-)
+import "github.com/bluepongo/mysql_autoInstall/install"
 
 const (
 	RootPath       = "/usr/local/"
@@ -35,27 +33,27 @@ func main() {
 	//install.AddUser(GroupName, UserName)
 
 	// 2 Execute the UntarGz command
-	install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
+	//install.UnTarGz(ShareFilePath+MySQLTarName, ShareFilePath)
+	//
+	//install.Mv(ShareFilePath+MySQLFileName, ShareFilePath+MySQL)
+	//install.Cp(ShareFilePath+MySQL, RootPath+MySQL)
+	//
+	//// 3 Create the data directory under /usr/local/mysql
+	//install.Mkdir(DataDirPath)
+	//
+	//// 4 Change the permissions
+	//install.Chown(GroupName, UserName, BaseDirPath)
+	//install.Chmod(BaseDirPath)
+	//
+	//// 5 Copy the default my.cnf to the /etc/
+	//install.Cp(ShareFilePath+MyCnfFileName, EtcPath+MyCnfFileName)
+	//
+	//// 6 Compile, install, and initialize mysql
+	////install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
+	//install.InitMs(MySQLDPath, UserName, DataDirPath, BaseDirPath)
 
-	install.Mv(ShareFilePath+MySQLFileName, ShareFilePath+MySQL)
-	install.Cp(ShareFilePath+MySQL, RootPath+MySQL)
-
-	// 3 Create the data directory under /usr/local/mysql
-	install.Mkdir(DataDirPath)
-
-	// 4 Change the permissions
-	install.Chown(GroupName, UserName, BaseDirPath)
-	install.Chmod(BaseDirPath)
-
-	// 5 Copy the default my.cnf to the /etc/
-	install.Cp(ShareFilePath+MyCnfFileName, EtcPath+MyCnfFileName)
-
-	// 6 Compile, install, and initialize mysql
-	//install.InitMysqld(MySQLDPath, UserName, DataDirPath, BaseDirPath)
-	install.InitMs(MySQLDPath, UserName, DataDirPath, BaseDirPath)
-
-	// 7 Start the mysql service
-	install.ServiceStart(MySQLServePath)
+	// 7 Connect to MySQL
+	install.MySQLInit()
 
 	// 8 Establish the soft connection
 	//install.Ln(MySQLServePath, LnMySQLServer)

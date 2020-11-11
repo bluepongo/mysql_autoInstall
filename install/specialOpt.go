@@ -66,33 +66,3 @@ func UnTarGz(srcFilePath string, destDirPath string) {
 	fmt.Printf("[Info]UnTarGzing file '%s' successfully!\n", srcFilePath)
 	log.Infof("UnTarGzing file '%s' successfully!", srcFilePath)
 }
-
-// Initialize mysqld.
-func InitMysqld(mySqld string, userName string, dataDirPath string, baseDirPath string) {
-
-	// Initialize a logger
-	fileName := LogFilePath
-	_, _, err := log.InitLoggerWithDefaultConfig(fileName)
-	if err != nil {
-		fmt.Printf("Init logger failed.\n%s", err.Error())
-	}
-
-	cmd := exec.Command(
-		mySqld, "--initialize", "--user="+userName, "--datadir="+dataDirPath, "--basedir="+baseDirPath)
-	var out bytes.Buffer
-	var stderr bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &stderr
-
-	// Execte the command
-	err = cmd.Run()
-	if err != nil {
-		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-		log.Warn("Initialize failed.")
-		return
-	}
-
-	fmt.Printf("==========...Initializing...==========\n%s\nInitialize successfully!\n", out.String())
-
-	log.Info("Initialize successfully!")
-}
