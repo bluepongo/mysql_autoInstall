@@ -1,6 +1,9 @@
 package main
 
-import "github.com/bluepongo/mysql_autoInstall/install"
+import (
+	"fmt"
+	"github.com/bluepongo/mysql_autoInstall/install"
+)
 
 const (
 	RootPath       = "/usr/local/"
@@ -53,9 +56,13 @@ func main() {
 	//install.InitMs(MySQLDPath, UserName, DataDirPath, BaseDirPath)
 
 	// 7 Connect to MySQL
-	install.MySQLInit()
+	DB := install.MySQLInit()
 
-	// 8 Establish the soft connection
-	//install.Ln(MySQLServePath, LnMySQLServer)
-	//install.Ln(MySQlBinPath+MySQL, BinPanth+MySQL)
+	// 8 Change the password
+	var pwd string
+	fmt.Println("Please input the password:")
+	fmt.Scanln(&pwd)
+
+	install.MySQLOperation(DB, fmt.Sprintf("set password for root@localhost = password('%s');", pwd))
+
 }
