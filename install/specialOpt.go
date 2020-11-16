@@ -12,13 +12,13 @@ import (
 )
 
 // UnTarGz a .tar.gz file.
-func UnTarGz(srcFilePath string, destDirPath string) {
+func UnTarGz(srcFilePath string, destDirPath string) (err error) {
 	// Create destination directory
 	Mkdir(destDirPath)
 
 	// Initialize a logger
 	fileName := LogFilePath
-	_, _, err := log.InitLoggerWithDefaultConfig(fileName)
+	_, _, err = log.InitLoggerWithDefaultConfig(fileName)
 	if err != nil {
 		fmt.Printf("Init logger failed.\n%s", err.Error())
 	}
@@ -52,15 +52,16 @@ func UnTarGz(srcFilePath string, destDirPath string) {
 			fw, _ := os.Create(destDirPath + "/" + hdr.Name)
 			if err != nil {
 				log.Warn("Cannot Create destDirpath.")
-				return
+				return err
 			}
 			_, err = io.Copy(fw, tr)
 			if err != nil {
 				log.Warn("Cannot Copy.")
-				return
+				return err
 			}
 		}
 	}
 	fmt.Printf("[Info]UnTarGzing file '%s' successfully!\n", srcFilePath)
 	log.Infof("UnTarGzing file '%s' successfully!", srcFilePath)
+	return err
 }

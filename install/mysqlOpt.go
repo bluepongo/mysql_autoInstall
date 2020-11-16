@@ -27,12 +27,12 @@ type DbInfo struct {
 }
 
 // Init mysql
-func MySQLInit() *sql.DB {
+func MySQLInit(password string) *sql.DB {
 
 	db1 := DbInfo{
 		Engine,
 		User,
-		Pass,
+		password,
 		Ip,
 		Port,
 		Table,
@@ -45,7 +45,7 @@ func MySQLInit() *sql.DB {
 		fmt.Printf("Init logger failed.\n%s", err.Error())
 	}
 
-	database, err := sql.Open(db1.Engine, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf-8", db1.User, db1.Pass, db1.Ip, db1.Port, db1.Table))
+	database, err := sql.Open(db1.Engine, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", db1.User, db1.Pass, db1.Ip, db1.Port, db1.Table))
 
 	if err := database.Ping(); err != nil {
 		fmt.Println("[Warn]mysql open failed, error:", err)

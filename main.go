@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/bluepongo/mysql_autoInstall/install"
 )
 
@@ -26,6 +25,8 @@ const (
 	GroupName = "mysql"
 	UserName  = "mysql"
 	MySQL     = "mysql"
+
+	InitPassword = ""
 
 	// Need to change
 )
@@ -56,13 +57,21 @@ func main() {
 	//install.InitMs(MySQLDPath, UserName, DataDirPath, BaseDirPath)
 
 	// 7 Connect to MySQL
-	DB := install.MySQLInit()
+	DB := install.MySQLInit("rootroot")
+	sql_example := "CREATE TABLE IF NOT EXISTS `runoob_test`(" +
+		"`runoob_id` INT UNSIGNED AUTO_INCREMENT," +
+		"`runoob_title` VARCHAR(100) NOT NULL," +
+		"`runoob_author` VARCHAR(40) NOT NULL," +
+		"`submission_date` DATE," +
+		"PRIMARY KEY ( `runoob_id` )" +
+		")ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+	install.MySQLOperation(DB, sql_example)
 
 	// 8 Change the password
-	var pwd string
-	fmt.Println("Please input the password:")
-	fmt.Scanln(&pwd)
-
-	install.MySQLOperation(DB, fmt.Sprintf("set password for root@localhost = password('%s');", pwd))
+	//var pwd string
+	//fmt.Println("Please input the password:")
+	//fmt.Scanln(&pwd)
+	//
+	//install.MySQLOperation(DB, fmt.Sprintf("set password for root@localhost = password('%s');", pwd))
 
 }
