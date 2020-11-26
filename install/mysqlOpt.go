@@ -3,92 +3,83 @@ package install
 import (
 	"database/sql"
 	"fmt"
-	"github.com/romberli/log"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const (
-	Engine = "mysql"
-	User   = "root"
-	Pass   = ""
-	Ip     = "127.0.0.1"
-	Port   = "3306"
-	Table  = "test"
-)
+var db *sql.DB
 
-type DbInfo struct {
-	Engine string
-	User   string
-	Pass   string
-	Ip     string
-	Port   string
-	Table  string
+// Initialize a database function
+func InitDB(Username, Password, Port, Database string) (err error) {
+	// DSN:Data Source Name
+	dsn := Username + ":" + Password + "@tcp(localhost:" + Port + ")/" + Database + "?charset=utf8"
+	// Check the password
+	db, err = sql.Open("mysql", dsn)
+	if err != nil {
+		fmt.Printf("Exec failed, err:%v\n", err)
+		return err
+	}
+	// attempt connect to the databse
+	err = db.Ping()
+	if err != nil {
+		fmt.Printf("Initialize failed, err:%v\n", err)
+		return err
+	}
+	fmt.Println("Database initialization succeeded.")
+	return nil
 }
 
-// Init mysql
-func MySQLInit(password string) *sql.DB {
-
-	db1 := DbInfo{
-		Engine,
-		User,
-		password,
-		Ip,
-		Port,
-		Table,
-	}
-
-	// Initialize a logger
-	fileName := LogFilePath
-	_, _, err := log.InitLoggerWithDefaultConfig(fileName)
+// Exec the sql string
+func ExecMysql(sqlStr string) {
+	_, err := db.Exec(sqlStr)
+	fmt.Println("mysql >", sqlStr)
 	if err != nil {
-		fmt.Printf("Init logger failed.\n%s", err.Error())
+		fmt.Printf("Exec failed, err:%v\n", err)
+		return
 	}
-
-	database, err := sql.Open(db1.Engine, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", db1.User, db1.Pass, db1.Ip, db1.Port, db1.Table))
-
-	if err := database.Ping(); err != nil {
-		fmt.Println("[Warn]mysql open failed, error:", err)
-		log.Warnf("Mysql open failed error: %s", err)
-		return nil
-	}
-	fmt.Println("[Info]Mysql open successfully!")
-	log.Info("Mysql open successfully!")
-	return database
+	fmt.Println("Exec success.")
 }
 
-// mysql operation
-func MySQLOperation(DB *sql.DB, query string, args ...interface{}) {
-
-	// Start a transaction
-	tx, err := DB.Begin()
+// Exec the insert sql string
+func InsertMysql(sqlStr string) {
+	ret, err := db.Exec(sqlStr)
+	fmt.Println("mysql >", sqlStr)
 	if err != nil {
-		fmt.Println("[Warn]]tx failed.")
-		log.Warn("tx failed.")
+		fmt.Printf("Insert failed, err:%v\n", err)
 		return
 	}
-
-	// Prepare a sql
-	stmt, err := tx.Prepare(query)
+	theID, err := ret.LastInsertId() // the new data id
 	if err != nil {
-		fmt.Println("[Warn]]Prepare failed.")
-		log.Warn("Prepare failed.")
+		fmt.Printf("Get lastinsert ID failed, err:%v\n", err)
 		return
 	}
+	fmt.Printf("Insert success, the id is %d.\n", theID)
+}
 
-	// Execute the sql sentence
-	res, err := stmt.Exec(args)
+type test struct {
+	id   int
+	name string
+}
+
+// Query many rows
+func QueryMany(sqlStr string) {
+	rows, err := db.Query(sqlStr)
+	fmt.Println("mysql >", sqlStr)
 	if err != nil {
-		fmt.Println("[Warn]]Exec failed.")
-		log.Warn("Exec failed.")
+		fmt.Printf("query failed, err:%v\n", err)
 		return
 	}
+	// 非常重要：关闭rows释放持有的数据库链接
+	defer rows.Close()
 
-	// Commit the transaction
-	tx.Commit()
-
-	// Get the last id
-	fmt.Println(res.LastInsertId())
-	fmt.Println("[Info]Mysql exec successfully!")
-	log.Info("Mysql exec successfully!")
+	// 循环读取结果集中的数据
+	for rows.Next() {
+		var t test
+		err := rows.Scan(&t.id, &t.name)
+		if err != nil {
+			fmt.Printf("scan failed, err:%v\n", err)
+			return
+		}
+		fmt.Printf("id:%d  name:%s\n", t.id, t.name)
+	}
 }

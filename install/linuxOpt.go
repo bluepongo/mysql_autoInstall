@@ -46,13 +46,13 @@ func ExecuteCommand(command string) (output string, err error) {
 // Add a new group
 func AddGroup(groupName string) (output string, err error) {
 	return ExecuteCommand(
-		fmt.Sprintf("sudo groupadd %s", groupName))
+		fmt.Sprintf("sudo groupadd -g 700 %s", groupName))
 }
 
 // Add a new user and assign him to the group
 func AddUser(groupName, userName string) (output string, err error) {
 	return ExecuteCommand(
-		fmt.Sprintf("sudo useradd %s -r -g %s", userName, groupName))
+		fmt.Sprintf("sudo useradd -u 700 -g %s %s", userName, groupName))
 }
 
 // Chown command
@@ -64,7 +64,7 @@ func Chown(groupName, userName, chPath string) (output string, err error) {
 // Chmod command
 func Chmod(chPath string) (output string, err error) {
 	return ExecuteCommand(
-		fmt.Sprintf("sudo chmod %s %s %s", "-R", "755", chPath))
+		fmt.Sprintf("sudo chmod %s %s %s", "-R", "775", chPath))
 }
 
 // Create a new file
@@ -76,13 +76,13 @@ func Mkdir(targetPath string) (output string, err error) {
 // Move a file to the toPath
 func Mv(fromPath, toPath string) (output string, err error) {
 	return ExecuteCommand(
-		fmt.Sprintf("sudo mv %s %s", fromPath, toPath))
+		fmt.Sprintf("sudo mv -f %s %s", fromPath, toPath))
 }
 
 // Copy a file to the toPath
 func Cp(fromPath, toPath string) (output string, err error) {
 	return ExecuteCommand(
-		fmt.Sprintf("sudo cp -r %s %s", fromPath, toPath))
+		fmt.Sprintf("sudo cp -rf %s %s", fromPath, toPath))
 }
 
 // Search for the file content
@@ -95,6 +95,12 @@ func Cat(targetPath string) (output string, err error) {
 func Ln(fromPath, toPath string) (output string, err error) {
 	return ExecuteCommand(
 		fmt.Sprintf("sudo ln -s %s %s", fromPath, toPath))
+}
+
+// Delete the target file
+func Rm(targetPath string) (output string, err error) {
+	return ExecuteCommand(
+		fmt.Sprintf("sudo rm -f %s", targetPath))
 }
 
 // Start a service
@@ -114,4 +120,23 @@ func InitMysql(mysqldPath, userName, dataDirPath, baseDirPath string) (output st
 		fmt.Sprintf(
 			"sudo %s --initialize-insecure --user=%s --datadir=%s --basedir=%s",
 			mysqldPath, userName, dataDirPath, baseDirPath))
+}
+
+func MultiInitMysql(mysqldPath, userName, baseDirPath, dataDirPath string) (output string, err error) {
+	return ExecuteCommand(
+		fmt.Sprintf(
+			"runuser -l mysql -c '%s --initialize-insecure --user=%s --basedir=%s --datadir=%s'",
+			mysqldPath, userName, baseDirPath, dataDirPath))
+}
+
+func MultiStartMysql(portNum string) (output string, err error) {
+	return ExecuteCommand(
+		fmt.Sprintf(
+			"runuser -l mysql -c 'mysqld_multi start %s'", portNum))
+}
+
+func MultiStopMysql(portNum string) (output string, err error) {
+	return ExecuteCommand(
+		fmt.Sprintf(
+			"runuser -l mysql -c 'mysqld_multi stop %s'", portNum))
 }

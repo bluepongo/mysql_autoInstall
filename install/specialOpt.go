@@ -29,6 +29,7 @@ func UnTarGz(srcFilePath string, destDirPath string) (err error) {
 		log.Warn("The src-file is not exits.")
 		return
 	}
+
 	defer fr.Close()
 
 	// Gzip reader
