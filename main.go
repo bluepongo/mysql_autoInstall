@@ -25,20 +25,6 @@ func main() {
 	}
 	log.Info("Initial log file success.")
 
-	// Install mysql multi
-	//fmt.Println("=========Start install the MySQL5.7=========")
-	//install.InstallMySQLMul()
-	//fmt.Println("=========Install the MySQL5.7 success=========")
-	//
-	//// Start the Mysql operations
-	//fmt.Println("=========Start the Mysql operations=========")
-	//dataRelated.CreateTest()
-	//
-	//// Build master-slave replication
-	//fmt.Println("=========Start build master-slave replication=========")
-	//install.BuildMS()
-	//fmt.Println("=========Setup master slave copied successfully=========")
-
 	// 接受参数
 	flag.Parse()
 	fmt.Printf("args=%s, num=%d\n", flag.Args(), flag.NArg())
@@ -52,16 +38,16 @@ func main() {
 		CurrentPort, _ := strconv.Atoi(IpPort.Port)
 		log.Infof("Current:Ip:%s, Port:%d", CurrentIP, CurrentPort)
 		// Install mysql remotely via SSH connection
-		fmt.Println("=========Prepare to create ssh connection=========")
+		fmt.Println("=========Prepare to generate mycnf=========")
 		// 生成对应的mycnf文件
-		err = conf.GenerateMyCnf("192.168.59.02", "3306")
+		err = conf.GenerateMyCnf(CurrentIP, IpPort.Port)
 		if err != nil {
 			log.Warnf("%v", err)
 			return
 		}
-
-		install.InstallMysqlSSH(CurrentIP)
-
+		fmt.Println("=========Prepare to create ssh connection=========")
+		install.InstallMysqlSSH(CurrentIP, IpPort.Port)
+		fmt.Println("=========Finish=========")
 	}
 
 }

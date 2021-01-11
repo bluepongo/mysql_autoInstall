@@ -12,14 +12,21 @@ import (
 
 //订制配置文件解析载体
 type Config struct {
-	Client *Client
-	Mysql  *Mysql
-	Mysqld *Mysqld
+	Client      *Client
+	MysqldMulti *MysqldMulti
+	Mysql       *Mysql
+	Mysqld      *Mysqld
 }
 
 //订制Client语句结构
 type Client struct {
 	Socket string `toml:"socket"`
+}
+
+type MysqldMulti struct {
+	Mysqld     string `toml:"mysqld"`
+	MysqlAdmin string `toml:"mysqladmin"`
+	Log        string `toml:"log"`
 }
 type Mysql struct {
 	DefaultCharacterSet string `toml:"default-character-set"`
@@ -79,7 +86,7 @@ type Mysqld struct {
 	InnodbLogFileSize                string `toml:"innodb_log_file_size"`
 	InnodbLogFilesInGroup            string `toml:"innodb_log_files_in_group"`
 	InnodbLockWaitTimeout            string `toml:"innodb_lock_wait_timeout"`
-	InnodbLockGroupHomeDir           string `toml:"innodb_lock_group_home_dir"`
+	InnodbLogGroupHomeDir            string `toml:"innodb_log_group_home_dir"`
 	InnodbIoCapacity                 string `toml:"innodb_io_capacity"`
 	InnodbIoCapacityMax              string `toml:"innodb_io_capacity_max"`
 	InnodbFilePerTable               string `toml:"innodb_file_per_table"`
@@ -94,7 +101,7 @@ type Mysqld struct {
 	InnodbMonitorEnable     string `toml:"innodb_monitor_enable"`
 	InnodbPrintAllDeadlocks string `toml:"innodb_print_all_deadlocks"`
 
-	GtidMode                 string `toml:"gitd_mode"`
+	GtidMode                 string `toml:"gtid_mode"`
 	EnforceGtidConsistency   string `toml:"enforce_gtid_consistency"`
 	BinlogGtidSimpleRecovery string `toml:"binlog_gtid_simple_recovery"`
 	SlaveParallelType        string `toml:"slave-parallel-type"`
@@ -109,7 +116,7 @@ type Mysqld struct {
 	InnodbUndoTablespaces            string `toml:"innodb_undo_tablespaces"`
 	InnodbUndoLogTruncate            string `toml:"innodb_undo_log_truncate"`
 	InnodbMaxUndoLogSize             string `toml:"innodb_max_undo_log_size"`
-	InnodbPurgeRsegTruncateFrequency string `innodb_purge_rseg_truncate_frequency`
+	InnodbPurgeRsegTruncateFrequency string `toml:"innodb_purge_rseg_truncate_frequency"`
 
 	TableOpenCache       string `toml:"table_open_cache"`
 	TmpTableSize         string `toml:"tmp_table_size"`
@@ -127,7 +134,6 @@ type Mysqld struct {
 	LongQueryTime                     string `toml:"long_query_time"`
 	LogOutput                         string `toml:"log_output"`
 	LogSlowAdminStatements            string `toml:"log_slow_admin_statements"`
-	LogSlaveSlaveStatements           string `toml:"log_slave_slave_statements"`
 	LogThrottleQueriesNotUsingIndexes string `toml:"log_throttle_queries_not_using_indexes"`
 
 	PerformanceSchema           string `toml:"performance_schema"`
@@ -160,7 +166,6 @@ func GetBuffer(Struct interface{}) string {
 	var buffer bytes.Buffer
 	encoder := toml.NewEncoder(&buffer)
 	encoder.Encode(Struct)
-	fmt.Println(buffer.String())
 	return buffer.String()
 }
 
@@ -193,6 +198,11 @@ func GenerateMyCnf(Ip string, PortNum string) error {
 	Conf.Client = GenerateClient(Conf.Client, PortNum)
 	result = result + GetBuffer(Conf.Client) + "\n"
 
+	// mysqlMulti section
+	result = result + "[mysqld_multi]\n"
+	Conf.MysqldMulti = GenerateMysqldMulti(Conf.MysqldMulti)
+	result = result + GetBuffer(Conf.MysqldMulti) + "\n"
+
 	// mysql section
 	result = result + "[mysql]\n"
 	Conf.Mysql = GenerateMysql(Conf.Mysql)
@@ -217,6 +227,14 @@ func GenerateMyCnf(Ip string, PortNum string) error {
 func GenerateClient(client *Client, PortNum string) *Client {
 	client.Socket = "/mysqldata/mysql" + PortNum + "/mysql.sock"
 	return client
+}
+
+// 给Mysql结构体赋值
+func GenerateMysqldMulti(mysqldmulti *MysqldMulti) *MysqldMulti {
+	mysqldmulti.Mysqld = "/usr/local/mysql/bin/mysqld_safe"
+	mysqldmulti.MysqlAdmin = "/usr/local/mysql/bin/mysqladmin"
+	mysqldmulti.Log = "/usr/local/mysql/mysqld_multi.log"
+	return mysqldmulti
 }
 
 // 给Mysql结构体赋值
@@ -282,10 +300,10 @@ func GenerateMysqld(mysqld *Mysqld, Ip string, PortNum string) *Mysqld {
 	mysqld.InnodbBufferPoolSize = "1024M"
 	mysqld.InnodbSortBufferSize = "4M"
 	mysqld.InnodbLogBufferSize = "32M"
-	mysqld.InnodbLogFileSize = "1G"
+	mysqld.InnodbLogFileSize = "256M"
 	mysqld.InnodbLogFilesInGroup = "4"
 	mysqld.InnodbLockWaitTimeout = "60"
-	mysqld.InnodbLockGroupHomeDir = "mysqllog/mysql" + PortNum + "/data"
+	mysqld.InnodbLogGroupHomeDir = "/mysqllog/mysql" + PortNum + "/data"
 
 	mysqld.InnodbIoCapacity = "1000"
 	mysqld.InnodbIoCapacityMax = "2000"
@@ -334,7 +352,6 @@ func GenerateMysqld(mysqld *Mysqld, Ip string, PortNum string) *Mysqld {
 	mysqld.LongQueryTime = "1"
 	mysqld.LogOutput = "file"
 	mysqld.LogSlowAdminStatements = "1"
-	mysqld.LogSlaveSlaveStatements = "1"
 	mysqld.LogThrottleQueriesNotUsingIndexes = "10"
 
 	mysqld.PerformanceSchema = "ON"

@@ -10,7 +10,7 @@ type IpPort struct {
 	Port string
 }
 
-var Ip = flag.String("ip", "192.168.59.2:3306", "Input The IP, Use ',' separated")
+var Ip = flag.String("ip", "192.168.59.4:3306", "Input The IP, Use ',' separated")
 
 func ExtractIP(Ips string) (res []IpPort) {
 	ipPorts := strings.Split(Ips, ",")

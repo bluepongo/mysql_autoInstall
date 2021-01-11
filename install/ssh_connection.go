@@ -29,12 +29,12 @@ func AddUserGroupSSH(sshConn *linux.MySSHConn, userName, groupName string) (resu
 }
 
 // UnTarGz the file
-func UnTarLocal(sourceFolder, tarname, filename, targetname string) (stdErr string, err error) {
-	stdErr, err = UnTarGz(sourceFolder+targetname, sourceFolder)
+func UnTarLocal(sourceFolder, tarName, fileName, targetName string) (stdErr string, err error) {
+	stdErr, err = UnTarGz(sourceFolder+tarName, sourceFolder)
 	if err != nil {
 		return stdErr, err
 	}
-	_, stdErr, err = ExecuteCommand(fmt.Sprintf("sudo mv %s %s", sourceFolder+filename, sourceFolder+targetname))
+	_, stdErr, err = ExecuteCommand(fmt.Sprintf("sudo mv %s %s", sourceFolder+fileName, sourceFolder+targetName))
 	if err != nil {
 		return stdErr, err
 	}
@@ -47,6 +47,12 @@ func CopyMysqlToRemote(sshConn *linux.MySSHConn, sourceFolder, targetPath string
 	return err
 }
 
+// Copy the my.cnf Folder to remote
+func CopyMyCnfToRemote(sshConn *linux.MySSHConn, sourceFolder, targetPath string) (err error) {
+	err = sshConn.CopyToRemote(sourceFolder, targetPath)
+	return err
+}
+
 // Create folder
 func MkdirSSH(sshConn *linux.MySSHConn, targetPath string) (result int, stdOut string, err error) {
 	result, stdOut, err = sshConn.ExecuteCommand(fmt.Sprintf("sudo mkdir -p %s", targetPath))
@@ -56,7 +62,16 @@ func MkdirSSH(sshConn *linux.MySSHConn, targetPath string) (result int, stdOut s
 	return result, stdOut, err
 }
 
-// CHown
+// mv file
+func CpSSH(sshConn *linux.MySSHConn, sourcePath, targetPath string) (result int, stdOut string, err error) {
+	result, stdOut, err = sshConn.ExecuteCommand(fmt.Sprintf("sudo cp %s %s", sourcePath, targetPath))
+	if err != nil {
+		return result, stdOut, err
+	}
+	return result, stdOut, err
+}
+
+// Chown
 func ChownSSH(sshConn *linux.MySSHConn, groupName, userName, chPath string) (result int, stdOut string, err error) {
 	result, stdOut, err = sshConn.ExecuteCommand(fmt.Sprintf("sudo chown -R %s %s", groupName+":"+userName, chPath))
 	if err != nil {
@@ -75,6 +90,14 @@ func ChmodSSH(sshConn *linux.MySSHConn, chPath string) (result int, stdOut strin
 func InitMysqlSSH(sshConn *linux.MySSHConn, mysqldPath, userName, baseDirPath, dataDirPath string) (result int, stdOut string, err error) {
 	result, stdOut, err = sshConn.ExecuteCommand(fmt.Sprintf("runuser -l mysql -c '%s --initialize-insecure --user=%s --basedir=%s --datadir=%s'",
 		mysqldPath, userName, baseDirPath, dataDirPath))
+	if err != nil {
+		return result, stdOut, err
+	}
+	return result, stdOut, err
+}
+
+func MysqldStartSSH(sshConn *linux.MySSHConn, PortNum string) (result int, stdOut string, err error) {
+	result, stdOut, err = sshConn.ExecuteCommand(fmt.Sprintf("runuser -l mysql -c 'mysqld_multi start %s'", PortNum))
 	if err != nil {
 		return result, stdOut, err
 	}
